@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Sidhartha's private preparation partner for the Google Software Application Development Apprenticeship 2027.">
+  <meta name="description" content="A customizable software-engineering interview preparation partner with adaptive roadmaps, daily plans, DSA practice, behavioral stories, core CS, and mocks.">
   <meta name="theme-color" content="#f8fafd">
-  <title>Sidhartha's Google Apprenticeship 2027 Prep Partner</title>
+  <title>SDE Interview Prep Partner</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%231a73e8'/%3E%3Cpath d='M25 18h-5c-5 0-7 3-7 8v3c0 3-2 4-5 4 3 0 5 1 5 4v3c0 5 2 8 7 8h5M39 18h5c5 0 7 3 7 8v3c0 3 2 4 5 4-3 0-5 1-5 4v3c0 5-2 8-7 8h-5' fill='none' stroke='white' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
   <script src="striver-a2z-data.js" defer></script>
@@ -19,18 +19,19 @@
       <div class="brand">
         <div class="brand-mark" aria-hidden="true"><span>{</span><span>}</span></div>
         <div>
-          <p class="eyebrow">March 2027 cohort</p>
-          <p class="brand-title">Prep Partner</p>
+          <p class="eyebrow" id="brandContext">Personal interview system</p>
+          <p class="brand-title">SDE Prep Partner</p>
         </div>
       </div>
 
       <div class="candidate-chip">
-        <span class="avatar">ST</span>
-        <span><strong>Sidhartha</strong><small>Software apprentice track</small></span>
+        <span class="avatar" id="candidateAvatar">ST</span>
+        <span><strong id="candidateName">Sidhartha</strong><small id="candidateTarget">Google apprenticeship track</small></span>
       </div>
 
       <nav class="side-nav">
         <button class="nav-item active" data-view="today"><span class="nav-dot blue"></span>Today</button>
+        <button class="nav-item" data-view="setup"><span class="nav-dot red"></span>Plan setup</button>
         <button class="nav-item" data-view="roadmap"><span class="nav-dot yellow"></span>Roadmap</button>
         <button class="nav-item" data-view="planner"><span class="nav-dot green"></span>Study planner</button>
         <button class="nav-item" data-view="dsa"><span class="nav-dot red"></span>DSA bank</button>
@@ -42,7 +43,7 @@
 
       <div class="sidebar-foot">
         <p><span class="save-dot"></span> Progress saves on this device</p>
-        <a href="https://www.google.com/about/careers/applications/jobs/results/123243602355593926-software-application-development-apprenticeship-march-2027-start" target="_blank" rel="noopener">Original role page <span aria-hidden="true">↗</span></a>
+        <button class="sidebar-link" data-view-jump="setup">Backup or customize</button>
       </div>
     </aside>
 
@@ -54,7 +55,7 @@
           <h1 id="viewTitle">Today</h1>
         </div>
         <div class="topbar-actions">
-          <span class="stage-pill"><span></span>Post-assessment prep</span>
+          <span class="stage-pill"><span></span><span id="topStageLabel">Technical preparation</span></span>
           <span class="date-pill" id="todayDate"></span>
         </div>
       </header>
@@ -64,12 +65,12 @@
           <div class="welcome-row">
             <div>
               <p class="section-kicker" id="greeting">Welcome back, Sidhartha</p>
-              <h2>One focused session. Three interview muscles.</h2>
-              <p class="lead">Solve one problem out loud, shape one clear story, and revise one technical topic. Consistency is the strategy.</p>
+              <h2 id="todayHeadline">One focused session. Three interview muscles.</h2>
+              <p class="lead" id="todayLead">Solve problems out loud, shape one clear story, and revise one technical topic. Consistency is the strategy.</p>
             </div>
             <div class="overall-progress" aria-label="Overall DSA progress">
               <div class="progress-ring" id="progressRing"><span id="progressPercent">0%</span></div>
-              <div><strong id="solvedCount">0 / 150</strong><small>questions solved</small></div>
+              <div><strong id="solvedCount">0 / 150</strong><small id="progressCollectionLabel">questions solved</small></div>
             </div>
           </div>
 
@@ -77,17 +78,18 @@
             <div class="section-heading compact">
               <div>
                 <p class="section-kicker">Daily plan</p>
-                <h3 id="today-plan-heading">Your three-part routine</h3>
+                <h3 id="today-plan-heading">Your personalized routine</h3>
               </div>
-              <span class="time-badge">~2 hours</span>
+              <span class="time-badge" id="dailyTimeBadge">~2 hours</span>
             </div>
 
             <div class="mission-grid">
-              <article class="mission-card blue-card">
-                <div class="mission-top"><span class="mission-number">01</span><span class="duration">60–75 min</span></div>
-                <p class="mission-label">DSA · planner pick</p>
+              <article class="mission-card blue-card" id="dailyDsaCard">
+                <div class="mission-top"><span class="mission-number">01</span><span class="duration" id="dailyDsaDuration">60–75 min</span></div>
+                <p class="mission-label" id="dailyDsaLabel">DSA · planner picks</p>
                 <h4 id="dailyDsaTitle">Two Sum</h4>
                 <p id="dailyDsaMeta">Arrays &amp; Hashing · Easy</p>
+                <div class="daily-question-queue" id="dailyQuestionQueue"></div>
                 <div class="mission-actions">
                   <button class="primary-button" id="practiceDailyDsa">Practice with timer</button>
                   <a class="text-link" id="dailyDsaLink" href="https://leetcode.com/problems/two-sum/" target="_blank" rel="noopener">Open problem ↗</a>
@@ -95,7 +97,7 @@
                 <label class="check-line"><input type="checkbox" data-daily="dsa"> I finished today's DSA work</label>
               </article>
 
-              <article class="mission-card green-card">
+              <article class="mission-card green-card" id="dailyBehaviorCard">
                 <div class="mission-top"><span class="mission-number">02</span><span class="duration">20 min</span></div>
                 <p class="mission-label">Behavioral · STAR-L</p>
                 <h4 id="dailyBehaviorTitle">Tell me about yourself.</h4>
@@ -104,13 +106,22 @@
                 <label class="check-line"><input type="checkbox" data-daily="behavioral"> I spoke the answer aloud</label>
               </article>
 
-              <article class="mission-card yellow-card">
+              <article class="mission-card yellow-card" id="dailyCoreCard">
                 <div class="mission-top"><span class="mission-number">03</span><span class="duration">30 min</span></div>
                 <p class="mission-label">Core CS / project</p>
                 <h4 id="dailyCoreTitle">Hashing fundamentals</h4>
                 <p id="dailyCoreCue">Explain collisions, average complexity, and C++ unordered_map trade-offs.</p>
                 <div class="mission-actions"><button class="secondary-button" id="openDailyCore">Open revision card</button></div>
                 <label class="check-line"><input type="checkbox" data-daily="core"> I revised and self-tested</label>
+              </article>
+
+              <article class="mission-card red-card" id="dailyExtraCard">
+                <div class="mission-top"><span class="mission-number">04</span><span class="duration" id="dailyExtraDuration">20 min</span></div>
+                <p class="mission-label" id="dailyExtraLabel">Interview drill</p>
+                <h4 id="dailyExtraTitle">Review one mistake</h4>
+                <p id="dailyExtraCue">Re-solve one marked question without looking at your previous code.</p>
+                <div class="mission-actions"><button class="secondary-button" id="openDailyExtra">Open recommended area</button></div>
+                <label class="check-line"><input type="checkbox" data-daily="extra"> I completed the extra drill</label>
               </article>
             </div>
           </section>
@@ -120,9 +131,9 @@
               <div class="section-heading compact">
                 <div>
                   <p class="section-kicker">Practice room</p>
-                  <h3 id="practice-heading">Think aloud for 45 minutes</h3>
+                  <h3 id="practice-heading">Practice in interview conditions</h3>
                 </div>
-                <div class="timer" id="timer" aria-live="polite">45:00</div>
+                <div class="practice-clock"><label><span class="sr-only">Practice duration</span><select id="timerPreset"><option value="30">30 min</option><option value="45" selected>45 min</option><option value="60">60 min</option><option value="90">90 min</option></select></label><div class="timer" id="timer" aria-live="polite">45:00</div></div>
               </div>
               <div class="practice-question">
                 <span class="topic-chip" id="practiceTopic">Arrays &amp; Hashing</span>
@@ -152,7 +163,7 @@
               </div>
               <div class="readiness-list">
                 <div><span>Weekly plan</span><strong id="todayPlanMetric">Not planned</strong></div>
-                <div><span>Core queue</span><strong id="nowQueue">15 remaining</strong></div>
+                <div><span>Question queue</span><strong id="nowQueue">15 remaining</strong></div>
                 <div><span>Needs revision</span><strong id="reviewCount">0 questions</strong></div>
                 <div><span>Bookmarks</span><strong id="bookmarkMetric">0 saved</strong></div>
                 <div><span>Weekly mock</span><strong id="mockStatus">Not logged yet</strong></div>
@@ -166,14 +177,94 @@
           </div>
         </section>
 
+        <section class="view" id="view-setup" aria-labelledby="setup-heading">
+          <div class="page-intro setup-intro">
+            <div>
+              <p class="section-kicker">Personalize once, replan anytime</p>
+              <h2 id="setup-heading">Build preparation around your interview</h2>
+              <p class="lead">Choose the role, company, interview style, time available, and current stage. The site will reshape the roadmap, daily workload, practice format, and candidate journey without deleting completed work.</p>
+            </div>
+            <div class="setup-status"><span>Active target</span><strong id="setupTargetSummary">Google · Apprenticeship</strong><small id="setupTimelineSummary">6 weeks · 6 study days</small></div>
+          </div>
+
+          <form class="setup-layout" id="profileForm">
+            <section class="panel setup-card setup-identity">
+              <div class="section-heading compact"><div><p class="section-kicker">Candidate</p><h3>Your target</h3></div><span class="step-badge">1</span></div>
+              <div class="form-grid two-up">
+                <label><span>Name</span><input id="profileName" type="text" maxlength="40" autocomplete="name" placeholder="Your name"></label>
+                <label><span>Target role</span><select id="profileRole"><option value="software-engineer">Software Engineer</option><option value="apprenticeship">Software Apprenticeship</option><option value="internship">Software Internship</option><option value="graduate-engineer">Graduate Engineer</option><option value="backend">Backend Developer</option><option value="full-stack">Full-stack Developer</option><option value="custom">Custom role</option></select></label>
+                <label id="customRoleWrap" hidden><span>Custom role</span><input id="profileCustomRole" type="text" maxlength="60" placeholder="Example: Embedded Software Engineer"></label>
+                <label><span>Company focus</span><select id="profileCompany"><option value="general">General SDE</option><option value="google">Google</option><option value="amazon">Amazon</option><option value="microsoft">Microsoft</option><option value="meta">Meta</option><option value="product">Product company</option><option value="startup">Startup</option><option value="placement">Campus / service company</option><option value="custom">Custom company</option></select></label>
+                <label id="customCompanyWrap" hidden><span>Custom company</span><input id="profileCustomCompany" type="text" maxlength="60" placeholder="Company name"></label>
+                <label><span>Current stage</span><select id="profileStage"><option value="foundation">Building foundations</option><option value="application">Applications and resume</option><option value="assessment">Online assessment</option><option value="recruiter">Recruiter / telephonic round</option><option value="technical">Technical interviews</option><option value="behavioral">Behavioral / hiring manager</option><option value="final">Final decision / offer</option></select></label>
+                <label><span>Current DSA level</span><select id="profileLevel"><option value="beginner">Beginner</option><option value="foundation">Foundation ready</option><option value="intermediate">Intermediate</option><option value="revision">Interview revision</option></select></label>
+              </div>
+            </section>
+
+            <section class="panel setup-card setup-roadmap">
+              <div class="section-heading compact"><div><p class="section-kicker">Roadmap</p><h3>Time and workload</h3></div><span class="step-badge">2</span></div>
+              <div class="form-grid two-up">
+                <label><span>Interview style</span><select id="profileStyle"><option value="balanced">Balanced interview preparation</option><option value="oa">Online assessment sprint</option><option value="technical">Technical interview focus</option><option value="dsa">DSA intensive</option><option value="placement">Placement preparation</option><option value="revision">Revision and mocks</option></select></label>
+                <label><span>Question collection</span><select id="profileTrack"><option value="balanced">Interview 150 · Balanced</option><option value="core">Core 90 only</option><option value="a2z">A2Z Essentials only</option><option value="striver">Complete Striver A2Z · 442</option></select></label>
+                <label><span>Roadmap length</span><select id="profileWeeks"><option value="2">2 weeks</option><option value="3">3 weeks</option><option value="4">4 weeks</option><option value="6">6 weeks</option><option value="8">8 weeks</option><option value="10">10 weeks</option><option value="12">12 weeks</option><option value="16">16 weeks</option><option value="20">20 weeks</option><option value="24">24 weeks</option></select></label>
+                <label><span>Study days each week</span><select id="profileDays"><option value="3">3 days</option><option value="4">4 days</option><option value="5">5 days</option><option value="6">6 days</option><option value="7">7 days</option></select></label>
+                <label><span>Daily study time</span><select id="profileMinutes"><option value="30">30 minutes</option><option value="45">45 minutes</option><option value="60">1 hour</option><option value="90">1.5 hours</option><option value="120">2 hours</option><option value="150">2.5 hours</option><option value="180">3 hours</option><option value="240">4 hours</option></select></label>
+                <label><span>Questions per study day</span><select id="profilePerDay"><option value="auto">Automatic from available time</option><option value="1">1 question</option><option value="2">2 questions</option><option value="3">3 questions</option><option value="4">4 questions</option><option value="5">5 questions</option><option value="6">6 questions</option></select></label>
+                <label><span>Target interview date</span><input id="profileTargetDate" type="date"></label>
+              </div>
+              <div class="workload-preview" id="workloadPreview"></div>
+            </section>
+
+            <section class="panel setup-card setup-focus">
+              <div class="section-heading compact"><div><p class="section-kicker">Emphasis</p><h3>Choose what belongs in the plan</h3></div><span class="step-badge">3</span></div>
+              <p class="field-help">Company presets change emphasis only; they do not claim that a question was asked by that company.</p>
+              <div class="focus-grid" id="focusTopics"></div>
+              <div class="include-grid">
+                <label><input type="checkbox" id="includeBehavioral"> Behavioral / STAR-L</label>
+                <label><input type="checkbox" id="includeCore"> Core CS and C++</label>
+                <label><input type="checkbox" id="includeProject"> Projects and resume</label>
+                <label><input type="checkbox" id="includeAptitude"> Aptitude / OA drills</label>
+                <label><input type="checkbox" id="includeMocks"> Weekly mock interview</label>
+              </div>
+            </section>
+
+            <section class="panel setup-card setup-story">
+              <div class="section-heading compact"><div><p class="section-kicker">Personal context</p><h3>Behavioral and project anchors</h3></div><span class="step-badge">4</span></div>
+              <div class="form-grid">
+                <label><span>Story anchors <small>comma-separated</small></span><input id="profileAnchors" type="text" maxlength="240" placeholder="Degree, transition, strengths, leadership example"></label>
+                <label><span>Primary project</span><input id="profileProject" type="text" maxlength="80" placeholder="Project name"></label>
+                <label><span>Project summary</span><textarea id="profileProjectSummary" maxlength="280" placeholder="Stack, problem, contribution, and measured result"></textarea></label>
+              </div>
+            </section>
+
+            <section class="panel setup-card setup-actions-card">
+              <div>
+                <p class="section-kicker">Generate</p>
+                <h3>Apply without losing progress</h3>
+                <p>Your solved questions, notes, saved code, STAR stories, revision dates, and mock history stay intact.</p>
+              </div>
+              <div class="setup-actions">
+                <button class="primary-button" type="submit">Save and build full roadmap</button>
+                <button class="secondary-button" type="button" id="replanFromToday">Replan from today</button>
+              </div>
+            </section>
+          </form>
+
+          <section class="panel backup-panel">
+            <div><p class="section-kicker">Portable progress</p><h3>Move your preparation to another device or domain</h3><p>Export creates a private JSON backup of your local progress. Import restores it after you verify the file.</p></div>
+            <div class="backup-actions"><button class="secondary-button" id="exportProgress">Export progress</button><button class="secondary-button" id="importProgress">Import progress</button><input id="importProgressFile" type="file" accept="application/json,.json" hidden></div>
+            <p class="copy-status" id="backupStatus" aria-live="polite"></p>
+          </section>
+        </section>
+
         <section class="view" id="view-roadmap" aria-labelledby="roadmap-heading">
           <div class="page-intro">
             <div>
-              <p class="section-kicker">Structured path</p>
-              <h2 id="roadmap-heading">Six weeks from fundamentals to interviews</h2>
-              <p class="lead">Your C++ basics and sorting foundation are already in place. Start with Arrays and Hashing, then build toward trees, graphs, and mixed mocks.</p>
+              <p class="section-kicker">Adaptive preparation path</p>
+              <h2 id="roadmap-heading">Your interview roadmap</h2>
+              <p class="lead" id="roadmapLead">A focused path from your current level to interview-ready practice.</p>
             </div>
-            <div class="start-chip"><span>Start here</span><strong>Week 1 · Arrays + Hashing</strong></div>
+            <div class="start-chip"><span id="roadmapStartLabel">Start here</span><strong id="roadmapStart">Week 1 · Arrays + Hashing</strong></div>
           </div>
           <div class="roadmap-grid" id="roadmapGrid"></div>
 
@@ -181,79 +272,72 @@
             <section class="panel">
               <div class="section-heading compact"><div><p class="section-kicker">Weekly rhythm</p><h3>Repeat this without replanning</h3></div></div>
               <div class="rhythm-list">
-                <div><span>Mon–Thu</span><p><strong>Learn + solve</strong> 1–2 ordered questions, one STAR prompt, one core topic.</p></div>
-                <div><span>Friday</span><p><strong>Revision</strong> Re-solve marked questions without notes; polish two stories.</p></div>
-                <div><span>Weekend</span><p><strong>Mock</strong> One 45-minute coding interview plus a 15-minute behavioral round.</p></div>
+                <div><span>Study days</span><p><strong>Learn + solve</strong> Follow the generated question queue and explain every approach aloud.</p></div>
+                <div><span>Revision</span><p><strong>Use evidence</strong> Re-solve marked questions and review the exact mistakes you logged.</p></div>
+                <div><span>Weekly</span><p><strong>Simulate</strong> Run the mock format selected for your interview style.</p></div>
               </div>
             </section>
-            <section class="panel official-snapshot">
-              <div class="section-heading compact"><div><p class="section-kicker">Official role snapshot</p><h3>What this plan is targeting</h3></div><span class="verified-badge">Listing now archived</span></div>
-              <dl>
-                <div><dt>Program</dt><dd>Software Application Development Apprenticeship</dd></div>
-                <div><dt>Start</dt><dd>March 2027</dd></div>
-                <div><dt>Duration</dt><dd>12 months</dd></div>
-                <div><dt>Format</dt><dd>In person</dd></div>
-                <div><dt>Locations</dt><dd>Bengaluru, Gurugram, Hyderabad, Mumbai</dd></div>
-                <div><dt>Application closed</dt><dd>August 3, 2026</dd></div>
-              </dl>
-              <p class="fine-print">Google Careers now shows the closed role as unavailable. The facts above reflect the live 2027 posting; the preparation stages below are a practical plan, and exact candidate stages can vary.</p>
-              <a class="text-link" href="https://www.google.com/about/careers/applications/jobs/results/123243602355593926-software-application-development-apprenticeship-march-2027-start" target="_blank" rel="noopener">Open the original listing ↗</a>
+            <section class="panel target-snapshot">
+              <div class="section-heading compact"><div><p class="section-kicker">Current target</p><h3 id="targetSnapshotHeading">Google · Software Apprenticeship</h3></div><span class="verified-badge" id="targetStyleBadge">Balanced</span></div>
+              <dl id="targetSnapshot"></dl>
+              <p class="fine-print" id="companyFocusNote">Company focus adjusts the preparation emphasis; it is not a list of confirmed interview questions.</p>
+              <button class="text-link" data-jump="setup">Edit target and workload</button>
             </section>
           </div>
 
           <section class="panel stage-map">
-            <div class="section-heading"><div><p class="section-kicker">Candidate journey</p><h3>Your working preparation map</h3></div><span class="stage-note">Exact stages may vary</span></div>
-            <div class="stage-line">
-              <div class="stage done"><span>1</span><strong>Application</strong><small>Submitted</small></div>
-              <div class="stage done"><span>2</span><strong>Coding assessment</strong><small>Cleared</small></div>
-              <div class="stage current"><span>3</span><strong>Telephonic / recruiter</strong><small>Prepare now</small></div>
-              <div class="stage"><span>4</span><strong>Technical interview</strong><small>DSA + communication</small></div>
-              <div class="stage"><span>5</span><strong>Decision / onboarding</strong><small>March 2027 start</small></div>
-            </div>
+            <div class="section-heading"><div><p class="section-kicker">Candidate journey</p><h3 id="journeyHeading">Your path to interview ready</h3></div><span class="stage-note">Select your current stage in Plan setup</span></div>
+            <div class="stage-line" id="journeyStages"></div>
           </section>
         </section>
 
         <section class="view" id="view-planner" aria-labelledby="planner-heading">
           <div class="page-intro">
             <div>
-              <p class="section-kicker">Planly-inspired weekly sprint</p>
-              <h2 id="planner-heading">A plan that fits your week</h2>
-              <p class="lead">Choose a track and realistic workload. The planner distributes questions across seven days, carries unfinished work forward, and keeps your next task visible on Today.</p>
+              <p class="section-kicker">Complete daily schedule</p>
+              <h2 id="planner-heading">Your roadmap, one week at a time</h2>
+              <p class="lead" id="plannerLead">Generate the full roadmap, then work only from the current week. Unfinished questions remain visible and solved work is never reset.</p>
             </div>
             <div class="planner-score"><strong id="plannerProgress">0%</strong><span>sprint complete</span></div>
           </div>
 
           <section class="panel planner-builder">
             <div class="section-heading compact">
-              <div><p class="section-kicker">Sprint setup</p><h3>Generate the next seven days</h3></div>
+              <div><p class="section-kicker">Quick plan controls</p><h3>Build or adjust the complete roadmap</h3></div>
               <span class="save-label">Saved on this device</span>
             </div>
             <div class="planner-controls">
               <label><span>Track</span><select id="plannerTrack"><option value="balanced">Interview 150 · Balanced</option><option value="core">Core 90 only</option><option value="a2z">A2Z Essentials only</option><option value="striver">Complete Striver A2Z · 442</option></select></label>
-              <label><span>Questions per study day</span><select id="plannerPerDay"><option value="1">1 question</option><option value="2">2 questions</option><option value="3">3 questions</option></select></label>
-              <label><span>Study days this week</span><select id="plannerDays"><option value="3">3 days</option><option value="4">4 days</option><option value="5">5 days</option><option value="6">6 days</option><option value="7">7 days</option></select></label>
-              <button class="primary-button" id="generatePlan">Create weekly sprint</button>
+              <label><span>Questions per study day</span><select id="plannerPerDay"><option value="auto">Automatic</option><option value="1">1 question</option><option value="2">2 questions</option><option value="3">3 questions</option><option value="4">4 questions</option><option value="5">5 questions</option><option value="6">6 questions</option></select></label>
+              <label><span>Study days each week</span><select id="plannerDays"><option value="3">3 days</option><option value="4">4 days</option><option value="5">5 days</option><option value="6">6 days</option><option value="7">7 days</option></select></label>
+              <label><span>Roadmap length</span><select id="plannerWeeks"><option value="2">2 weeks</option><option value="3">3 weeks</option><option value="4">4 weeks</option><option value="6">6 weeks</option><option value="8">8 weeks</option><option value="10">10 weeks</option><option value="12">12 weeks</option><option value="16">16 weeks</option><option value="20">20 weeks</option><option value="24">24 weeks</option></select></label>
+              <button class="primary-button" id="generatePlan">Generate full roadmap</button>
             </div>
             <div class="planner-metrics">
-              <div><strong id="plannerCompleted">0 / 0</strong><span>tasks completed</span></div>
+              <div><strong id="plannerCompleted">0 / 0</strong><span>DSA tasks completed</span></div>
               <div><strong id="plannerCarryover">0</strong><span>carryover tasks</span></div>
               <div class="planner-progress-bar"><span><i id="plannerProgressFill"></i></span><small>Progress updates when a question is solved.</small></div>
             </div>
           </section>
 
+          <div class="week-navigator" id="weekNavigator">
+            <button class="secondary-button" id="planPrevWeek" type="button">← Previous</button>
+            <div><span>Viewing</span><strong id="plannerWeekLabel">Week 1</strong><small id="plannerWeekPhase">Foundation</small></div>
+            <button class="secondary-button" id="planNextWeek" type="button">Next →</button>
+          </div>
           <div class="planner-week" id="weeklyPlan"></div>
 
           <div class="planner-principles">
-            <article><span>1</span><div><strong>Learn in modules</strong><p>Use the library's topic sequence instead of choosing random problems.</p></div></article>
-            <article><span>2</span><div><strong>Brute → better → optimal</strong><p>Record each approach in the study sheet before chasing final code.</p></div></article>
-            <article><span>3</span><div><strong>Review your errors</strong><p>Bookmarks, notes, mistakes, code, and revision dates remain attached to each problem.</p></div></article>
+            <article><span>1</span><div><strong>Follow one queue</strong><p>The company, style, focus modules, available time, and current progress determine the order.</p></div></article>
+            <article><span>2</span><div><strong>Measure workload honestly</strong><p>Automatic mode uses available minutes; manual mode supports one to six questions per study day.</p></div></article>
+            <article><span>3</span><div><strong>Replan without restarting</strong><p>Carry unfinished work forward while preserving solved questions, notes, code, mistakes, and revisions.</p></div></article>
           </div>
         </section>
 
         <section class="view" id="view-dsa" aria-labelledby="dsa-heading">
           <div class="page-intro">
             <div>
-              <p class="section-kicker" id="libraryKicker">150-question interview track</p>
+              <p class="section-kicker" id="libraryKicker">Customizable interview library</p>
               <h2 id="dsa-heading">Core 90 + A2Z essentials</h2>
               <p class="lead" id="libraryLead">Your focused Google-apprenticeship route: 90 interview-pattern questions plus 60 gap-covering A2Z essentials.</p>
             </div>
@@ -265,7 +349,7 @@
             </div>
           </div>
 
-          <div class="disclaimer-bar"><span aria-hidden="true">i</span><p><strong>Transparent scope:</strong> the Core 90 is a curated Google-style foundation, not a leaked or guaranteed Google list. The complete track mirrors the current official <a href="https://takeuforward.org/prep-hub/strivers-a2z-dsa-sheet?page=sheet" target="_blank" rel="noopener">Striver A2Z sheet ↗</a>: 442 items verified 21 September 2026. Solutions and practice links stay on their original sites, where access can vary. ZENKAI inspired the planning and revision workflow.</p></div>
+          <div class="disclaimer-bar"><span aria-hidden="true">i</span><p><strong>Transparent scope:</strong> the Core 90 is a curated interview foundation, not a leaked or guaranteed company list. Company presets only change planning emphasis. The complete track mirrors the current official <a href="https://takeuforward.org/prep-hub/strivers-a2z-dsa-sheet?page=sheet" target="_blank" rel="noopener">Striver A2Z sheet ↗</a>: 442 items verified 21 September 2026. Solutions and practice links stay on their original sites, where access can vary.</p></div>
 
           <div class="collection-switcher" aria-label="Choose a DSA collection">
             <button class="collection-option active" data-collection-preset="interview">
@@ -284,6 +368,7 @@
 
           <div class="library-modes" aria-label="Question library views">
             <button class="mode-button active" data-library-mode="all"><span id="libraryAllLabel">All 150</span></button>
+            <button class="mode-button" data-library-mode="plan">My roadmap</button>
             <button class="mode-button" data-library-mode="due">Revision due</button>
             <button class="mode-button" data-library-mode="bookmarked">Bookmarked</button>
             <button class="mode-button" data-library-mode="mistakes">Mistake log</button>
@@ -330,7 +415,7 @@
                 <span class="save-label" id="starSaved">Saved locally</span>
               </div>
               <p class="prompt-cue" id="activePromptCue"></p>
-              <div class="story-anchors">
+              <div class="story-anchors" id="storyAnchors">
                 <span>ECE → CS</span><span>GATE CS qualified</span><span>C++ + Core CS</span><span>YOLOv5 + OCR</span><span>Team of 3</span>
               </div>
               <div class="star-fields">
@@ -338,7 +423,7 @@
                 <label><span><strong>T</strong> Task</span><textarea data-star-field="task" placeholder="What outcome or responsibility was yours?"></textarea></label>
                 <label><span><strong>A</strong> Action</span><textarea data-star-field="action" placeholder="What did you personally decide and do?"></textarea></label>
                 <label><span><strong>R</strong> Result</span><textarea data-star-field="result" placeholder="What changed? Quantify when honest."></textarea></label>
-                <label><span><strong>L</strong> Learning</span><textarea data-star-field="learning" placeholder="What will you carry into the apprenticeship?"></textarea></label>
+                <label><span><strong>L</strong> Learning</span><textarea data-star-field="learning" placeholder="What will you carry into this role?"></textarea></label>
               </div>
               <div class="builder-actions"><button class="primary-button" id="copyStar">Copy answer outline</button><button class="secondary-button" id="clearStar">Clear this answer</button></div>
               <p class="copy-status" id="copyStatus" aria-live="polite"></p>
@@ -359,16 +444,16 @@
 
           <section class="project-deep-dive">
             <div class="project-header">
-              <div><p class="section-kicker">Project deep dive</p><h3>Smart Quality Test System</h3><p>YOLOv5 + OCR · Python/OpenCV · team of 3 · ~95% accuracy</p></div>
-              <span class="project-badge">Your strongest technical story</span>
+              <div><p class="section-kicker">Project deep dive</p><h3 id="projectName">Smart Quality Test System</h3><p id="projectSummary">YOLOv5 + OCR · Python/OpenCV · team of 3 · ~95% accuracy</p></div>
+              <span class="project-badge" id="projectBadge">Your strongest technical story</span>
             </div>
             <div class="project-ladder">
-              <details open><summary>1. The 60-second overview</summary><p>Problem → users → input → YOLOv5 detection → OCR extraction → quality decision → measured outcome. End with your exact contribution.</p></details>
-              <details><summary>2. Architecture and data flow</summary><p>Be ready to draw the camera/input stage, preprocessing, object detection, OCR, decision logic, storage, and web interface. Explain why each boundary exists.</p></details>
-              <details><summary>3. Model and metric choices</summary><p>Define what “95% accuracy” measured. Separate detection metrics from OCR accuracy, and explain the validation set and failure cases honestly.</p></details>
-              <details><summary>4. Engineering trade-offs</summary><p>Discuss latency versus accuracy, lighting and image quality, false accepts versus false rejects, model size, and why YOLOv5 was suitable.</p></details>
-              <details><summary>5. Ownership and teamwork</summary><p>Describe how you led a three-person team, split work, integrated components, resolved a blocker, and verified the final system.</p></details>
-              <details><summary>6. What you would improve</summary><p>Propose better data collection, experiment tracking, confidence thresholds, monitoring, testing, deployment, and a feedback loop—without pretending they already existed.</p></details>
+              <details open><summary>1. The 60-second overview</summary><p>Problem → users → inputs → key processing stages → output → measured result. End with your exact contribution.</p></details>
+              <details><summary>2. Architecture and data flow</summary><p>Be ready to draw the major components, their interfaces, storage, external services, and failure paths. Explain why each boundary exists.</p></details>
+              <details><summary>3. Technology and metric choices</summary><p>Define every result precisely. Explain why you chose the stack, how you evaluated it, and which failure cases remain.</p></details>
+              <details><summary>4. Engineering trade-offs</summary><p>Discuss performance, reliability, complexity, cost, maintainability, security, and the alternatives you considered.</p></details>
+              <details><summary>5. Ownership and teamwork</summary><p>Separate your contribution from the team's work. Describe one decision, one blocker, and how the final system was verified.</p></details>
+              <details><summary>6. What you would improve</summary><p>Propose the next change to architecture, testing, monitoring, deployment, or user feedback—without pretending it already existed.</p></details>
             </div>
           </section>
         </section>
@@ -422,13 +507,11 @@
             </div>
           </div>
           <div class="resource-grid">
-            <section class="resource-group"><p class="section-kicker">Official</p><h3>Google apprenticeship</h3>
-              <a href="https://www.google.com/about/careers/applications/jobs/results/123243602355593926-software-application-development-apprenticeship-march-2027-start" target="_blank" rel="noopener"><span><strong>Original 2027 role posting</strong><small>Now archived; retained for reference</small></span><b>↗</b></a>
-              <a href="https://buildyourfuture.withgoogle.com/apprenticeships" target="_blank" rel="noopener"><span><strong>Google Apprenticeships</strong><small>Official program overview</small></span><b>↗</b></a>
-              <a href="https://www.google.com/about/careers/applications/jobs/results/?employment_type=APPRENTICESHIP" target="_blank" rel="noopener"><span><strong>Google Careers alerts</strong><small>Search current apprenticeship roles</small></span><b>↗</b></a>
+            <section class="resource-group"><p class="section-kicker">Target research</p><h3 id="resourceCompanyHeading">Google apprenticeship</h3>
+              <div id="targetResourceLinks"></div>
             </section>
             <section class="resource-group"><p class="section-kicker">Practice</p><h3>DSA platforms</h3>
-              <a href="https://leetcode.com/company/google/" target="_blank" rel="noopener"><span><strong>LeetCode · Google</strong><small>Company-tagged practice view</small></span><b>↗</b></a>
+              <a href="https://leetcode.com/explore/interview/" target="_blank" rel="noopener"><span><strong>LeetCode interviews</strong><small>Extra interview-pattern practice</small></span><b>↗</b></a>
               <a href="https://takeuforward.org/prep-hub/strivers-a2z-dsa-sheet" target="_blank" rel="noopener"><span><strong>Striver A2Z</strong><small>Full curriculum behind the added essentials</small></span><b>↗</b></a>
               <a href="https://takeuforward.org/community/posts/explore-zenkai-a-complete-guide-to-takeuforward-s-latest-rollout" target="_blank" rel="noopener"><span><strong>ZENKAI guide</strong><small>Planning, revision, notes, lists, and practice inspiration</small></span><b>↗</b></a>
               <a href="https://www.hackerrank.com/interview/interview-preparation-kit" target="_blank" rel="noopener"><span><strong>HackerRank kit</strong><small>Timed platform familiarity</small></span><b>↗</b></a>
@@ -445,8 +528,8 @@
             <div class="section-heading compact"><div><p class="section-kicker">Before any recruiter call</p><h3>Five-minute readiness check</h3></div></div>
             <label><input type="checkbox" data-checklist="resume"> Resume and job posting are open beside me</label>
             <label><input type="checkbox" data-checklist="intro"> 60-second introduction is fresh, not memorized</label>
-            <label><input type="checkbox" data-checklist="why"> “Why this apprenticeship?” connects learning, contribution, and fit</label>
-            <label><input type="checkbox" data-checklist="project"> Project architecture and 95% metric are clearly defined</label>
+            <label><input type="checkbox" data-checklist="why"> <span id="checklistWhy">My role-and-company answer connects contribution, growth, and fit</span></label>
+            <label><input type="checkbox" data-checklist="project"> <span id="checklistProject">My project architecture, ownership, trade-offs, and result are clear</span></label>
             <label><input type="checkbox" data-checklist="questions"> I have two thoughtful questions for the interviewer</label>
             <label><input type="checkbox" data-checklist="setup"> Laptop, audio, internet, coding environment, and quiet space are tested</label>
           </section>
@@ -454,8 +537,8 @@
       </main>
 
       <footer>
-        <p>Private preparation workspace · Not affiliated with or endorsed by Google.</p>
-        <button class="text-link" id="resetProgress">Reset saved progress</button>
+        <p>Personal interview-preparation workspace · Company presets guide emphasis and do not claim verified question history.</p>
+        <div class="footer-actions"><button class="text-link" id="footerExport">Export progress</button><button class="text-link" id="resetProgress">Reset saved progress</button></div>
       </footer>
     </div>
   </div>
