@@ -1,36 +1,35 @@
 # SDE Interview Prep Partner
 
-Private source backup for a customizable software-engineering interview preparation website.
+A customizable, browser-based planner for software engineering interview preparation.
 
-Live site: https://sidhartha-google-apprenticeship-2027.sidhartha0925.chatgpt.site
+**Live demo:** https://sidhartha0925-web.github.io/google-apprenticeship-2027-prep/
 
-## Features
+## What it includes
 
-- Custom candidate, role, company, current stage, and target date
-- Balanced, online-assessment, technical, DSA-intensive, placement, and revision interview styles
-- 2–24 week roadmaps with 3–7 study days per week
-- Automatic or manual workload of 1–6 questions per study day
-- Company and topic emphasis without claiming verified company question history
-- Full candidate journey from foundations through final decision
-- Interview-focused 150-question track and complete Striver A2Z 442-item track
-- Daily queues, carryover work, revision scheduling, notes, mistakes, code, confidence, and bookmarks
-- STAR-L behavioral preparation, core CS, project deep dives, mocks, and supporting tasks
-- JSON export/import for moving private progress between browsers or domains
+- A personalized candidate journey for a chosen role, company, interview stage, and target date
+- Flexible 2–24 week roadmaps, 3–7 study days per week, and adjustable daily question workloads
+- Interview-style choices for balanced, technical, DSA-intensive, assessment, placement, and revision preparation
+- A 150-question interview track and the 442-item Striver A2Z track
+- Daily planning, question status, confidence, bookmarks, revision dates, notes, and mistake tracking
+- STAR-L behavioral practice, core computer science and project review, and mock interview tracking
+- JSON export and import for moving progress between browsers or domains
 
-The original Google apprenticeship setup remains the default preset, so existing local progress and stable question IDs continue to work.
+The original Google apprenticeship setup remains available as a preset.
 
 ## Run locally
 
-The deployable static site is in `dist/`. No build step is required.
+The site is static and requires no build step:
 
 ```sh
 python3 -m http.server 8000 --directory dist
 ```
 
-Then open `http://localhost:8000`.
+Open http://localhost:8000.
 
-## Deploy independently
+## Deployment
 
-Publish the contents of `dist/` as the web root on any static host. Use no build command and set the output/publish directory to `dist`.
+GitHub Actions publishes the contents of `dist/` to GitHub Pages whenever changes are pushed to `main`. In the repository’s **Settings → Pages**, choose **GitHub Actions** as the build and deployment source.
 
-Progress is stored in the browser's local storage and is intentionally not committed to this repository. Browser storage is tied to a domain, so export progress before moving to a new domain and import it there.
+## Progress storage
+
+Preparation progress is saved in the browser’s local storage on the current device and domain. It does not automatically sync across devices. Export your progress before moving to another domain, then import it there.
