@@ -259,19 +259,102 @@
     return MODULE_ORDER.length + (completeIndex >= 0 ? completeIndex : 999);
   };
 
+  const ROLE_LABELS = {
+    "software-engineer": "Software Engineer",
+    apprenticeship: "Software Apprenticeship",
+    internship: "Software Internship",
+    "graduate-engineer": "Graduate Engineer",
+    backend: "Backend Developer",
+    "full-stack": "Full-stack Developer",
+    custom: "Custom role"
+  };
+  const COMPANY_PROFILES = {
+    general: {
+      label: "General SDE",
+      emphasis: ["Arrays & Hashing", "Strings & Sliding Window", "Binary Search", "Trees & Tries", "Graphs & Heaps", "Dynamic Programming"],
+      note: "Balanced foundations, reusable problem-solving patterns, communication, core CS, and project depth.",
+      careers: "https://www.linkedin.com/jobs/"
+    },
+    google: {
+      label: "Google",
+      emphasis: ["Arrays & Hashing", "Strings & Sliding Window", "Trees & Tries", "Graphs & Heaps", "Recursion & Backtracking", "Dynamic Programming"],
+      note: "Emphasize clear reasoning, data-structure choices, edge cases, clean implementation, and adaptable follow-ups.",
+      careers: "https://www.google.com/about/careers/applications/"
+    },
+    amazon: {
+      label: "Amazon",
+      emphasis: ["Arrays & Hashing", "Trees & Tries", "Graphs & Heaps", "Greedy & Intervals", "Dynamic Programming"],
+      note: "Balance coding with structured behavioral evidence, ownership, trade-offs, and customer-focused decisions.",
+      careers: "https://www.amazon.jobs/"
+    },
+    microsoft: {
+      label: "Microsoft",
+      emphasis: ["Arrays & Hashing", "Strings & Sliding Window", "Linked Lists", "Trees & Tries", "Dynamic Programming"],
+      note: "Practice collaborative problem solving, readable code, testing, fundamentals, and thoughtful technical discussion.",
+      careers: "https://careers.microsoft.com/"
+    },
+    meta: {
+      label: "Meta",
+      emphasis: ["Arrays & Hashing", "Strings & Sliding Window", "Trees & Tries", "Graphs & Heaps", "Greedy & Intervals"],
+      note: "Prioritize efficient pattern recognition, concise communication, coding speed, and strong verification habits.",
+      careers: "https://www.metacareers.com/"
+    },
+    product: {
+      label: "Product company",
+      emphasis: ["Arrays & Hashing", "Binary Search", "Trees & Tries", "Graphs & Heaps", "Dynamic Programming"],
+      note: "Combine interview patterns with engineering judgment, product thinking, project ownership, and maintainable code.",
+      careers: "https://www.linkedin.com/jobs/"
+    },
+    startup: {
+      label: "Startup",
+      emphasis: ["Foundations & Sorting", "Arrays & Hashing", "Strings & Sliding Window", "Stacks & Queues", "Greedy & Intervals"],
+      note: "Favor practical coding, debugging, project depth, learning speed, and decisions made with incomplete information.",
+      careers: "https://wellfound.com/jobs"
+    },
+    placement: {
+      label: "Campus / service company",
+      emphasis: ["Foundations & Sorting", "Arrays & Hashing", "Strings & Sliding Window", "Binary Search", "Bit Manipulation"],
+      note: "Balance fundamentals, aptitude, coding assessments, core CS, communication, and resume-based questions.",
+      careers: "https://www.linkedin.com/jobs/"
+    },
+    custom: {
+      label: "Custom company",
+      emphasis: ["Arrays & Hashing", "Strings & Sliding Window", "Binary Search", "Trees & Tries"],
+      note: "Use your selected focus modules and the job description to tune the preparation mix.",
+      careers: "https://www.linkedin.com/jobs/"
+    }
+  };
+  const STYLE_PROFILES = {
+    balanced: { label: "Balanced", dsaShare: 0.58, timer: 45, extra: "revision", note: "DSA, behavioral, core CS, project work, and one weekly mock." },
+    oa: { label: "Online assessment", dsaShare: 0.78, timer: 60, extra: "aptitude", note: "Timed sets, speed, accuracy, debugging, aptitude, and platform familiarity." },
+    technical: { label: "Technical interview", dsaShare: 0.64, timer: 45, extra: "followup", note: "Think aloud, compare approaches, code cleanly, test, and answer follow-ups." },
+    dsa: { label: "DSA intensive", dsaShare: 0.82, timer: 45, extra: "revision", note: "Higher question volume with pattern review and spaced re-solving." },
+    placement: { label: "Placement preparation", dsaShare: 0.5, timer: 60, extra: "aptitude", note: "Coding, aptitude, core CS, communication, resume, and placement-style mocks." },
+    revision: { label: "Revision and mocks", dsaShare: 0.55, timer: 45, extra: "mock", note: "Due revisions, bookmarked mistakes, mixed questions, and repeated mock interviews." }
+  };
+  const JOURNEY_STAGES = [
+    { id: "foundation", label: "Foundations", cue: "Programming + core patterns" },
+    { id: "application", label: "Applications", cue: "Resume + target research" },
+    { id: "assessment", label: "Assessment", cue: "Timed coding + aptitude" },
+    { id: "recruiter", label: "Recruiter", cue: "Introduction + fit" },
+    { id: "technical", label: "Technical", cue: "DSA + communication" },
+    { id: "behavioral", label: "Behavioral", cue: "Evidence + reflection" },
+    { id: "final", label: "Decision", cue: "Questions + offer readiness" }
+  ];
+
   const behavioralPrompts = [
-    { id: "intro", title: "Tell me about yourself.", cue: "Connect your 2025 ECE degree, GATE CS preparation, C/C++, core CS, Smart Quality Test System, and current software-engineering direction in 60–75 seconds." },
-    { id: "why-apprenticeship", title: "Why this Google apprenticeship?", cue: "Balance three points: structured learning, real software work, and the contribution you can already make through fundamentals and disciplined learning." },
-    { id: "ece-to-cs", title: "Why did you move from ECE to software?", cue: "Show a positive pull toward problem solving and CS—not rejection of ECE. Use GATE CS and consistent DSA practice as evidence." },
-    { id: "difficult-problem", title: "Tell me about a difficult problem you solved.", cue: "Choose a technical blocker from YOLOv5/OCR or a meaningful coding problem. Make the diagnosis and decision process specific." },
-    { id: "leadership", title: "Describe a time you showed leadership.", cue: "Use the three-person major-project team. Explain how you created clarity, divided ownership, integrated work, and protected the outcome." },
+    { id: "intro", title: "Tell me about yourself.", cue: "Connect two or three relevant anchors, your strongest evidence, and the direction you want to grow in 60–75 seconds." },
+    { id: "why-opportunity", title: "Why this role and company?", cue: "Connect the role, the company, the value you can contribute now, and the specific growth you are seeking." },
+    { id: "career-direction", title: "Why did you choose software engineering?", cue: "Show a positive pull toward problem solving and building software. Use concrete learning and project evidence." },
+    { id: "difficult-problem", title: "Tell me about a difficult problem you solved.", cue: "Choose a meaningful project or coding blocker. Make the diagnosis, options, decision, and verification specific." },
+    { id: "leadership", title: "Describe a time you showed leadership.", cue: "Explain how you created clarity, aligned ownership, handled a blocker, and protected the outcome—with or without a formal title." },
     { id: "conflict", title: "Tell me about a disagreement with a teammate.", cue: "Show listening, evidence, a shared goal, and a concrete resolution. Avoid making the other person look careless." },
     { id: "failure", title: "Tell me about a failure or setback.", cue: "Choose a real setback, own your part, explain the recovery, and end with a behavior that changed afterward." },
     { id: "feedback", title: "Describe difficult feedback you received.", cue: "Show low defensiveness: what you heard, how you checked it, what you changed, and how the result improved." },
     { id: "ambiguity", title: "How have you handled an ambiguous task?", cue: "Explain how you turned uncertainty into questions, assumptions, a small test, and a decision." },
-    { id: "learning", title: "Tell me about learning something quickly.", cue: "GATE CS preparation or YOLOv5/OCR are strong options. Show the learning system, not only the topic." },
+    { id: "learning", title: "Tell me about learning something quickly.", cue: "Use a real technical or academic example. Show the learning system, feedback loop, and application—not only the topic." },
     { id: "priorities", title: "Describe a time you managed competing priorities.", cue: "Explain how you ranked impact and urgency, communicated trade-offs, and still maintained quality." },
-    { id: "user-focus", title: "When did you improve something for a user?", cue: "Frame the quality-test system around the operator or reviewer: what friction existed and how your design reduced it." },
+    { id: "user-focus", title: "When did you improve something for a user?", cue: "Name the user, the friction you observed, the change you made, and the evidence that it helped." },
     { id: "integrity", title: "Tell me about an ethical or quality decision.", cue: "Use a moment when accuracy, honesty, safety, or transparent reporting mattered more than appearing successful." },
     { id: "collaboration", title: "How do you work with someone different from you?", cue: "Use curiosity, role clarity, communication preferences, and a shared standard for the work." },
     { id: "growth", title: "What is one area you are improving?", cue: "Choose a real, non-fatal gap. Explain the practice system and evidence of progress; do not disguise a strength as a weakness." }
@@ -290,8 +373,8 @@
     { id: "cn-web", code: "CN", title: "HTTP, HTTPS, and DNS", cue: "Trace what happens after entering a URL.", questions: ["DNS resolution path", "TCP + TLS handshake", "HTTP methods and status codes"] },
     { id: "cn-transport", code: "CN", title: "TCP, UDP, and reliability", cue: "Choose the protocol from product requirements.", questions: ["TCP vs UDP", "Flow vs congestion control", "Why the three-way handshake?"] },
     { id: "git", code: "Git", title: "Git and collaboration", cue: "Be comfortable explaining your actual workflow.", questions: ["Commit, branch, merge", "Merge vs rebase", "Resolve a conflict safely"] },
-    { id: "project-model", code: "ML", title: "YOLOv5 and OCR pipeline", cue: "Separate detection, recognition, and decision logic.", questions: ["Why YOLOv5?", "How OCR errors propagate", "Latency vs accuracy trade-off"] },
-    { id: "project-metrics", code: "Proj", title: "Project metrics and ownership", cue: "Define the 95% figure precisely and claim only your work.", questions: ["What exactly was measured?", "Most important failure case", "Your contribution vs team contribution"] }
+    { id: "project-model", code: "Proj", title: "Project architecture and data flow", cue: "Separate components, interfaces, decisions, and failure paths.", questions: ["Why this architecture and stack?", "How data moves end to end", "Most important technical trade-off"] },
+    { id: "project-metrics", code: "Own", title: "Project results and ownership", cue: "Define the result precisely and claim only your work.", questions: ["What exactly was measured?", "Most important failure case", "Your contribution vs team contribution"] }
   ];
 
   const roadmap = [
@@ -312,7 +395,42 @@
     mocks: [],
     checklist: {},
     currentQuestionId: null,
-    planner: { track: "balanced", perDay: 2, days: 6, assignments: [] }
+    profile: {
+      name: "Sidhartha",
+      role: "apprenticeship",
+      customRole: "",
+      company: "google",
+      customCompany: "",
+      stage: "recruiter",
+      level: "foundation",
+      style: "balanced",
+      track: "balanced",
+      weeks: 6,
+      days: 6,
+      minutes: 120,
+      perDay: "2",
+      targetDate: "",
+      focus: ["Arrays & Hashing", "Strings & Sliding Window", "Binary Search"],
+      includeBehavioral: true,
+      includeCore: true,
+      includeProject: true,
+      includeAptitude: false,
+      includeMocks: true,
+      anchors: "ECE → CS, GATE CS qualified, C++ + Core CS, YOLOv5 + OCR, Team of 3",
+      project: "Smart Quality Test System",
+      projectSummary: "YOLOv5 + OCR · Python/OpenCV · team of 3 · ~95% accuracy"
+    },
+    planner: {
+      track: "balanced",
+      perDay: "2",
+      days: 6,
+      weeks: 6,
+      startDate: "",
+      weekCursor: 0,
+      assignments: [],
+      supportTasks: [],
+      supportCompleted: {}
+    }
   };
 
   const loadState = () => {
@@ -328,10 +446,18 @@
         core: parsed.core || {},
         mocks: Array.isArray(parsed.mocks) ? parsed.mocks : [],
         checklist: parsed.checklist || {},
+        profile: {
+          ...defaultState.profile,
+          ...(parsed.profile || {}),
+          focus: Array.isArray(parsed.profile?.focus) ? parsed.profile.focus : defaultState.profile.focus
+        },
         planner: {
           ...defaultState.planner,
           ...(parsed.planner || {}),
-          assignments: Array.isArray(parsed.planner?.assignments) ? parsed.planner.assignments : []
+          perDay: String(parsed.planner?.perDay ?? parsed.profile?.perDay ?? defaultState.planner.perDay),
+          assignments: Array.isArray(parsed.planner?.assignments) ? parsed.planner.assignments : [],
+          supportTasks: Array.isArray(parsed.planner?.supportTasks) ? parsed.planner.supportTasks : [],
+          supportCompleted: parsed.planner?.supportCompleted || {}
         }
       };
     } catch {
@@ -341,7 +467,7 @@
 
   let state = loadState();
   let activePromptId = state.activePrompt || "intro";
-  let timerSeconds = 45 * 60;
+  let timerSeconds = (STYLE_PROFILES[state.profile.style]?.timer || 45) * 60;
   let timerHandle = null;
   let toastHandle = null;
   let libraryMode = "all";
@@ -381,6 +507,55 @@
   const formatShortDate = (value) => new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short" }).format(new Date(`${value}T12:00:00`));
   const isDue = (questionState) => questionState.status === "revise" || Boolean(questionState.nextRevision && questionState.nextRevision <= dateKey());
   const revisionDays = (confidence) => ({ 1: 1, 2: 3, 3: 7 }[Number(confidence)] || 2);
+  const companyProfile = () => COMPANY_PROFILES[state.profile.company] || COMPANY_PROFILES.general;
+  const companyLabel = () => state.profile.company === "custom"
+    ? (String(state.profile.customCompany || "").trim() || "Custom company")
+    : companyProfile().label;
+  const roleLabel = () => state.profile.role === "custom"
+    ? (String(state.profile.customRole || "").trim() || "Custom role")
+    : (ROLE_LABELS[state.profile.role] || ROLE_LABELS["software-engineer"]);
+  const styleProfile = () => STYLE_PROFILES[state.profile.style] || STYLE_PROFILES.balanced;
+  const effectivePerDay = (profile = state.profile) => {
+    if (String(profile.perDay) !== "auto") return Math.max(1, Math.min(6, Number(profile.perDay) || 1));
+    const style = STYLE_PROFILES[profile.style] || STYLE_PROFILES.balanced;
+    return Math.max(1, Math.min(6, Math.floor((Number(profile.minutes) * style.dsaShare) / 32)));
+  };
+  const activeFocusModules = () => {
+    const selected = Array.isArray(state.profile.focus) ? state.profile.focus.filter((module) => MODULE_ORDER.includes(module)) : [];
+    return selected.length ? selected : companyProfile().emphasis;
+  };
+  const behavioralCue = (prompt) => {
+    const anchors = String(state.profile.anchors || "").split(",").map((value) => value.trim()).filter(Boolean);
+    const anchorText = anchors.slice(0, 3).join(", ") || "your strongest skills and evidence";
+    if (prompt.id === "intro") return `Connect ${anchorText} to ${roleLabel()} and the direction you want to grow in 60–75 seconds.`;
+    if (prompt.id === "why-opportunity") return `Connect ${roleLabel()}, ${companyLabel()}, what you can contribute now, and the specific growth you want.`;
+    if (["difficult-problem", "leadership", "user-focus"].includes(prompt.id) && state.profile.project) {
+      return `${prompt.cue} ${state.profile.project} may be useful if it gives you concrete evidence.`;
+    }
+    return prompt.cue;
+  };
+  const displayCoreTopics = () => coreTopics.map((topic) => {
+    const project = state.profile.project || "Primary project";
+    if (topic.id === "project-model") return { ...topic, title: `${project} · architecture` };
+    if (topic.id === "project-metrics") return { ...topic, title: `${project} · results and ownership` };
+    return topic;
+  });
+  const profileQuestionPool = () => state.profile.track === "striver"
+    ? completeA2ZQuestions
+    : state.profile.track === "core"
+      ? coreQuestions
+      : state.profile.track === "a2z"
+        ? a2zQuestions
+        : interviewQuestions;
+  const stageIndex = () => Math.max(0, JOURNEY_STAGES.findIndex((stage) => stage.id === state.profile.stage));
+  const phaseForWeek = (weekIndex, totalWeeks = Number(state.profile.weeks) || 6) => {
+    const ratio = totalWeeks <= 1 ? 1 : weekIndex / (totalWeeks - 1);
+    if (ratio < 0.28) return "Foundation";
+    if (ratio < 0.66) return "Pattern building";
+    if (ratio < 0.86) return "Interview practice";
+    return "Revision + mocks";
+  };
+  const plannerQuestionIds = () => new Set(state.planner.assignments.map((assignment) => resolveProgressId(assignment.questionId)));
 
   const showToast = (message) => {
     const toast = $("#toast");
@@ -392,6 +567,7 @@
 
   const viewMeta = {
     today: ["Your next best step", "Today"],
+    setup: ["Personalize your preparation", "Plan setup"],
     roadmap: ["The full preparation path", "Roadmap"],
     planner: ["A realistic weekly sprint", "Study planner"],
     dsa: ["Choose focused or complete practice", "DSA library"],
@@ -420,7 +596,7 @@
       .map((assignment) => assignment.questionId);
     const planned = plannedIds.map((id) => questionById.get(id)).find(Boolean);
     if (planned) return planned;
-    const fallbackPool = state.planner.track === "striver" ? completeA2ZQuestions : interviewQuestions;
+    const fallbackPool = profileQuestionPool();
     const needsRevision = fallbackPool.find((question) => isDue(getQuestionState(question.id)));
     if (needsRevision) return needsRevision;
     return fallbackPool.find((question) => question.priority === "Now" && getQuestionState(question.id).status !== "solved")
@@ -462,7 +638,10 @@
     $("#todayDate").textContent = new Intl.DateTimeFormat("en-IN", { weekday: "short", day: "numeric", month: "short" }).format(today);
     const hour = today.getHours();
     const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
-    $("#greeting").textContent = `${greeting}, Sidhartha`;
+    $("#greeting").textContent = `${greeting}, ${state.profile.name || "Candidate"}`;
+    $("#todayHeadline").textContent = `${styleProfile().label} preparation for ${companyLabel()}`;
+    $("#todayLead").textContent = `${effectivePerDay()} ${effectivePerDay() === 1 ? "question" : "questions"} per study day · ${state.profile.minutes} minutes · ${state.profile.days} days each week. Work the queue in order and explain your decisions aloud.`;
+    $("#dailyTimeBadge").textContent = `${state.profile.minutes} min plan`;
 
     const todayKey = dateKey(today);
     if (state.daily.date !== todayKey) state.daily = { date: todayKey, checks: {} };
@@ -470,42 +649,223 @@
       checkbox.checked = Boolean(state.daily.checks[checkbox.dataset.daily]);
     });
 
-    const question = nextRecommendedQuestion();
+    const planned = state.planner.assignments
+      .filter((assignment) => assignment.date <= todayKey && getQuestionState(assignment.questionId).status !== "solved")
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .map((assignment) => questionById.get(assignment.questionId))
+      .filter(Boolean);
+    const unique = [...new Map(planned.map((question) => [resolveProgressId(question.id), question])).values()];
+    const dailyQuestions = (unique.length ? unique : [nextRecommendedQuestion()]).slice(0, effectivePerDay());
+    const question = dailyQuestions[0];
     $("#dailyDsaTitle").textContent = question.title;
     $("#dailyDsaMeta").textContent = `${question.topic} · ${question.difficulty} · ${question.pattern}`;
     $("#dailyDsaLink").href = question.url;
     $("#practiceDailyDsa").dataset.questionId = question.id;
+    $("#dailyDsaDuration").textContent = `${Math.max(25, Math.round(Number(state.profile.minutes) * styleProfile().dsaShare))} min`;
+    $("#dailyDsaLabel").textContent = `${styleProfile().label} · ${dailyQuestions.length}-question queue`;
+    $("#dailyQuestionQueue").innerHTML = dailyQuestions.length > 1
+      ? dailyQuestions.map((item, index) => `<button type="button" data-daily-question="${item.id}"><span>${index + 1}</span><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(item.difficulty)}</small></button>`).join("")
+      : "";
 
     const prompt = behavioralPrompts[dayNumber(today) % behavioralPrompts.length];
     $("#dailyBehaviorTitle").textContent = prompt.title;
-    $("#dailyBehaviorCue").textContent = prompt.cue;
+    $("#dailyBehaviorCue").textContent = behavioralCue(prompt);
     $("#openDailyBehavior").dataset.promptId = prompt.id;
+    $("#dailyBehaviorCard").hidden = !state.profile.includeBehavioral;
 
-    const topic = coreTopics[(dayNumber(today) + 3) % coreTopics.length];
+    const visibleCoreTopics = displayCoreTopics();
+    const topic = visibleCoreTopics[(dayNumber(today) + 3) % visibleCoreTopics.length];
     $("#dailyCoreTitle").textContent = topic.title;
     $("#dailyCoreCue").textContent = topic.cue;
     $("#openDailyCore").dataset.coreId = topic.id;
+    $("#dailyCoreCard").hidden = !(state.profile.includeCore || state.profile.includeProject);
+
+    const extra = styleProfile().extra;
+    const extraContent = (extra === "aptitude" && state.profile.includeAptitude)
+      ? ["Aptitude / OA drill", "Run a timed accuracy set", "Complete one quantitative, logical, or debugging drill under a strict timer.", "mocks"]
+      : extra === "mock" && state.profile.includeMocks
+        ? ["Mock practice", "Run one interview segment", "Use the scorecard to record evidence and one behavior to improve.", "mocks"]
+        : extra === "followup"
+          ? ["Technical follow-up", "Push the first solution further", "Ask how constraints, memory limits, or changing requirements alter the approach.", "today"]
+          : ["Revision drill", "Re-solve one mistake", "Choose a due, bookmarked, or mistake-tagged question and solve it without previous code.", "dsa"];
+    $("#dailyExtraLabel").textContent = extraContent[0];
+    $("#dailyExtraTitle").textContent = extraContent[1];
+    $("#dailyExtraCue").textContent = extraContent[2];
+    $("#openDailyExtra").dataset.jump = extraContent[3];
+    $("#dailyExtraDuration").textContent = `${Math.max(15, Math.round(Number(state.profile.minutes) * 0.15))} min`;
+    $("#dailyExtraCard").hidden = false;
 
     const current = questionById.get(state.currentQuestionId) || question;
     setPracticeQuestion(current, false);
+    renderProfileChrome();
     saveState();
   }
 
+  function renderProfileChrome() {
+    const journey = JOURNEY_STAGES[stageIndex()] || JOURNEY_STAGES[0];
+    $("#candidateName").textContent = state.profile.name || "Candidate";
+    $("#candidateAvatar").textContent = String(state.profile.name || "Candidate").trim().split(/\s+/).map((part) => part[0]).slice(0, 2).join("").toUpperCase() || "ME";
+    $("#candidateTarget").textContent = `${companyLabel()} · ${roleLabel()}`;
+    $("#brandContext").textContent = `${companyLabel()} · ${styleProfile().label}`;
+    $("#topStageLabel").textContent = journey.label;
+    $("#projectName").textContent = state.profile.project || "Primary project";
+    $("#projectSummary").textContent = state.profile.projectSummary || "Add the stack, your contribution, and one measured result in Plan setup.";
+    $("#projectBadge").textContent = state.profile.includeProject ? "Prepare depth, ownership, and trade-offs" : "Optional project preparation";
+    const anchors = String(state.profile.anchors || "").split(",").map((value) => value.trim()).filter(Boolean);
+    $("#storyAnchors").innerHTML = (anchors.length ? anchors : ["Add story anchors in Plan setup"]).map((anchor) => `<span>${escapeHtml(anchor)}</span>`).join("");
+    $("#checklistWhy").textContent = `My “Why ${companyLabel()} and ${roleLabel()}?” answer connects contribution, growth, and fit`;
+    $("#checklistProject").textContent = `${state.profile.project || "My primary project"}: architecture, ownership, trade-offs, and result are clear`;
+  }
+
+  function renderSetupProfile() {
+    const profile = state.profile;
+    $("#profileName").value = profile.name;
+    $("#profileRole").value = profile.role;
+    $("#profileCustomRole").value = profile.customRole;
+    $("#profileCompany").value = profile.company;
+    $("#profileCustomCompany").value = profile.customCompany;
+    $("#profileStage").value = profile.stage;
+    $("#profileLevel").value = profile.level;
+    $("#profileStyle").value = profile.style;
+    $("#profileTrack").value = profile.track;
+    $("#profileWeeks").value = String(profile.weeks);
+    $("#profileDays").value = String(profile.days);
+    $("#profileMinutes").value = String(profile.minutes);
+    $("#profilePerDay").value = String(profile.perDay);
+    $("#profileTargetDate").value = profile.targetDate;
+    $("#profileAnchors").value = profile.anchors;
+    $("#profileProject").value = profile.project;
+    $("#profileProjectSummary").value = profile.projectSummary;
+    $("#includeBehavioral").checked = Boolean(profile.includeBehavioral);
+    $("#includeCore").checked = Boolean(profile.includeCore);
+    $("#includeProject").checked = Boolean(profile.includeProject);
+    $("#includeAptitude").checked = Boolean(profile.includeAptitude);
+    $("#includeMocks").checked = Boolean(profile.includeMocks);
+    $("#focusTopics").innerHTML = MODULE_ORDER.map((module) => `<label class="focus-option"><input type="checkbox" value="${escapeHtml(module)}" data-focus-module ${profile.focus.includes(module) ? "checked" : ""}><span>${escapeHtml(module)}</span></label>`).join("");
+    refreshSetupConditionals();
+    updateWorkloadPreview();
+  }
+
+  function refreshSetupConditionals() {
+    $("#customRoleWrap").hidden = $("#profileRole").value !== "custom";
+    $("#customCompanyWrap").hidden = $("#profileCompany").value !== "custom";
+  }
+
+  function profileFromForm() {
+    return {
+      ...state.profile,
+      name: $("#profileName").value.trim() || "Candidate",
+      role: $("#profileRole").value,
+      customRole: $("#profileCustomRole").value.trim(),
+      company: $("#profileCompany").value,
+      customCompany: $("#profileCustomCompany").value.trim(),
+      stage: $("#profileStage").value,
+      level: $("#profileLevel").value,
+      style: $("#profileStyle").value,
+      track: $("#profileTrack").value,
+      weeks: Number($("#profileWeeks").value),
+      days: Number($("#profileDays").value),
+      minutes: Number($("#profileMinutes").value),
+      perDay: $("#profilePerDay").value,
+      targetDate: $("#profileTargetDate").value,
+      focus: $$('[data-focus-module]:checked').map((input) => input.value),
+      includeBehavioral: $("#includeBehavioral").checked,
+      includeCore: $("#includeCore").checked,
+      includeProject: $("#includeProject").checked,
+      includeAptitude: $("#includeAptitude").checked,
+      includeMocks: $("#includeMocks").checked,
+      anchors: $("#profileAnchors").value.trim(),
+      project: $("#profileProject").value.trim(),
+      projectSummary: $("#profileProjectSummary").value.trim()
+    };
+  }
+
+  function updateWorkloadPreview() {
+    const profile = profileFromForm();
+    const perDay = effectivePerDay(profile);
+    const totalDays = profile.weeks * profile.days;
+    const totalSlots = totalDays * perDay;
+    const bankSize = { balanced: 150, core: 90, a2z: 60, striver: 442 }[profile.track] || 150;
+    const totalQuestions = Math.min(totalSlots, bankSize);
+    const style = STYLE_PROFILES[profile.style] || STYLE_PROFILES.balanced;
+    const dateWarning = profile.targetDate && profile.targetDate < dateKey()
+      ? " The selected target date is in the past."
+      : profile.targetDate && new Date(`${profile.targetDate}T12:00:00`) < addDays(new Date(), profile.weeks * 7 - 1)
+        ? " The target date arrives before this roadmap ends; shorten the roadmap or increase study days."
+        : "";
+    const capacityNote = totalSlots > bankSize ? ` The selected bank contains ${bankSize} entries, so later study days shift to revision and supporting practice.` : "";
+    $("#workloadPreview").innerHTML = `<div><strong>${perDay}</strong><span>questions / study day</span></div><div><strong>${totalDays}</strong><span>planned study days</span></div><div><strong>up to ${totalQuestions}</strong><span>new question tasks</span></div><p>${escapeHtml(style.note + capacityNote + dateWarning)}</p>`;
+    const company = COMPANY_PROFILES[profile.company] || COMPANY_PROFILES.general;
+    const companyName = profile.company === "custom" ? (profile.customCompany || "Custom company") : company.label;
+    const role = profile.role === "custom" ? (profile.customRole || "Custom role") : ROLE_LABELS[profile.role];
+    $("#setupTargetSummary").textContent = `${companyName} · ${role}`;
+    $("#setupTimelineSummary").textContent = `${profile.weeks} weeks · ${profile.days} study days · ${profile.minutes} min/day`;
+  }
+
+  function renderJourney() {
+    const current = stageIndex();
+    $("#journeyHeading").textContent = `${state.profile.name || "Your"} path toward ${roleLabel()}`;
+    $("#journeyStages").innerHTML = JOURNEY_STAGES.map((stage, index) => `<div class="stage ${index < current ? "done" : index === current ? "current" : ""}"><span>${index < current ? "✓" : index + 1}</span><strong>${escapeHtml(stage.label)}</strong><small>${index === current ? "Current · " : ""}${escapeHtml(stage.cue)}</small></div>`).join("");
+  }
+
+  function renderTargetSnapshot() {
+    $("#targetSnapshotHeading").textContent = `${companyLabel()} · ${roleLabel()}`;
+    $("#targetStyleBadge").textContent = styleProfile().label;
+    $("#targetSnapshot").innerHTML = `
+      <div><dt>Current stage</dt><dd>${escapeHtml((JOURNEY_STAGES[stageIndex()] || JOURNEY_STAGES[0]).label)}</dd></div>
+      <div><dt>Roadmap</dt><dd>${state.profile.weeks} weeks · ${state.profile.days} days/week</dd></div>
+      <div><dt>Daily workload</dt><dd>${effectivePerDay()} questions · ${state.profile.minutes} minutes</dd></div>
+      <div><dt>Collection</dt><dd>${escapeHtml({ balanced: "Interview 150", core: "Core 90", a2z: "A2Z Essentials", striver: "Complete A2Z 442" }[state.profile.track] || "Interview 150")}</dd></div>
+      <div><dt>Practice style</dt><dd>${escapeHtml(styleProfile().label)}</dd></div>
+      <div><dt>Target date</dt><dd>${state.profile.targetDate ? formatShortDate(state.profile.targetDate) : "Flexible"}</dd></div>`;
+    $("#companyFocusNote").textContent = `${companyProfile().note} This preset guides emphasis and does not claim verified company question history.`;
+  }
+
+  function renderTargetResources() {
+    $("#resourceCompanyHeading").textContent = `${companyLabel()} research`;
+    const links = [
+      { url: companyProfile().careers, title: `${companyLabel()} careers`, note: "Review current roles and the exact job description" },
+      { url: "https://leetcode.com/explore/interview/", title: "Interview practice", note: "Use as an extra drill, not a replacement for your plan" }
+    ];
+    if (state.profile.company === "google" && state.profile.role === "apprenticeship") {
+      links.splice(1, 0, { url: "https://buildyourfuture.withgoogle.com/apprenticeships", title: "Google Apprenticeships", note: "Official program overview" });
+    }
+    $("#targetResourceLinks").innerHTML = links.map((link) => `<a href="${link.url}" target="_blank" rel="noopener"><span><strong>${escapeHtml(link.title)}</strong><small>${escapeHtml(link.note)}</small></span><b>↗</b></a>`).join("");
+  }
+
   function renderRoadmap() {
-    const firstIncompleteWeek = roadmap.find(({ week }) => questions.some((q) => q.week === week && getQuestionState(q.id).status !== "solved"))?.week || 6;
-    $("#roadmapGrid").innerHTML = roadmap.map((item) => {
-      const weekQuestions = questions.filter((question) => question.week === item.week);
-      const solved = weekQuestions.filter((question) => getQuestionState(question.id).status === "solved").length;
-      const percentage = Math.round((solved / weekQuestions.length) * 100);
+    const totalWeeks = Number(state.profile.weeks) || 6;
+    const preferred = [...new Set([...activeFocusModules(), ...companyProfile().emphasis, ...MODULE_ORDER])];
+    const chunks = Array.from({ length: totalWeeks }, () => []);
+    preferred.forEach((module, index) => chunks[Math.min(totalWeeks - 1, Math.floor(index * totalWeeks / preferred.length))].push(module));
+    const pendingAssignment = state.planner.assignments.find((assignment) => getQuestionState(assignment.questionId).status !== "solved");
+    const pendingSupport = state.planner.supportTasks.find((task) => !state.planner.supportCompleted[task.id]);
+    const pendingWeeks = [pendingAssignment?.week, pendingSupport?.week].filter(Boolean).map(Number);
+    const hasGeneratedPlan = state.planner.assignments.length > 0 || state.planner.supportTasks.length > 0;
+    const firstIncompleteWeek = pendingWeeks.length ? Math.min(...pendingWeeks) : (hasGeneratedPlan ? totalWeeks : 1);
+    $("#roadmapLead").textContent = `${totalWeeks} weeks for ${roleLabel()} preparation at ${companyLabel()}, using ${state.profile.minutes} minutes on ${state.profile.days} days each week.`;
+    const startModules = chunks[Math.max(0, firstIncompleteWeek - 1)] || chunks[0];
+    $("#roadmapStartLabel").textContent = state.planner.assignments.length ? "Continue here" : "Generate your plan";
+    $("#roadmapStart").textContent = `Week ${firstIncompleteWeek} · ${(startModules.length ? startModules : [phaseForWeek(firstIncompleteWeek - 1, totalWeeks)]).join(" + ")}`;
+    $("#roadmapGrid").innerHTML = chunks.map((modules, index) => {
+      const week = index + 1;
+      const weekAssignments = state.planner.assignments.filter((assignment) => Number(assignment.week || 1) === week);
+      const solved = weekAssignments.filter((assignment) => getQuestionState(assignment.questionId).status === "solved").length;
+      const expected = hasGeneratedPlan ? weekAssignments.length : effectivePerDay() * state.profile.days;
+      const percentage = expected ? Math.round((solved / expected) * 100) : 0;
+      const phase = phaseForWeek(index, totalWeeks);
+      const weekModules = modules.length ? modules : [phase === "Revision + mocks" ? "Mixed revision" : preferred[index % preferred.length]];
       return `
-        <article class="roadmap-card ${item.week === firstIncompleteWeek ? "current" : ""}">
-          <span class="roadmap-number">W${item.week}</span>
-          <h3>${escapeHtml(item.title)}</h3>
-          <p>${escapeHtml(item.summary)}</p>
-          <div class="roadmap-targets">${item.targets.map((target) => `<span>${escapeHtml(target)}</span>`).join("")}</div>
-          <div class="mini-progress"><div><i style="width:${percentage}%"></i></div><small>${solved}/${weekQuestions.length}</small></div>
+        <article class="roadmap-card ${week === firstIncompleteWeek ? "current" : ""}">
+          <span class="roadmap-number">W${week}</span>
+          <h3>${escapeHtml(weekModules.join(" + "))}</h3>
+          <p><strong>${escapeHtml(phase)}.</strong> ${escapeHtml(styleProfile().note)}</p>
+          <div class="roadmap-targets"><span>${expected} DSA ${expected === 1 ? "task" : "tasks"}</span><span>${state.profile.includeBehavioral ? "STAR-L" : "DSA review"}</span><span>${state.profile.includeMocks && week % Math.max(1, Math.round(totalWeeks / 4)) === 0 ? "Mock week" : "Explain aloud"}</span></div>
+          <div class="mini-progress"><div><i style="width:${percentage}%"></i></div><small>${solved}/${expected}</small></div>
         </article>`;
     }).join("");
+    renderJourney();
+    renderTargetSnapshot();
   }
 
   function plannerPool(track) {
@@ -517,13 +877,15 @@
           ? a2zQuestions
           : interviewQuestions;
     const available = sourcePool.filter((question) => getQuestionState(question.id).status !== "solved");
+    const focusOrder = [...new Set([...activeFocusModules(), ...companyProfile().emphasis, ...MODULE_ORDER])];
     const ranked = (items) => items.sort((a, b) => {
       const statusRank = { revise: 0, practicing: 1, todo: 2, solved: 3 };
       const priorityRank = { Now: 0, Core: 1, Stretch: 2 };
       return (statusRank[getQuestionState(a.id).status] - statusRank[getQuestionState(b.id).status])
         || (track === "striver"
           ? (a.sourcePosition || 0) - (b.sourcePosition || 0)
-          : priorityRank[a.priority] - priorityRank[b.priority]);
+          : (focusOrder.indexOf(a.module) - focusOrder.indexOf(b.module))
+            || priorityRank[a.priority] - priorityRank[b.priority]);
     });
     if (track === "core" || track === "a2z" || track === "striver") return ranked(available);
     const core = ranked(available.filter((question) => question.collection === "Core 90"));
@@ -538,24 +900,38 @@
 
   function generatePlanner() {
     const track = $("#plannerTrack").value;
-    const perDay = Number($("#plannerPerDay").value);
+    const perDay = $("#plannerPerDay").value;
     const days = Number($("#plannerDays").value);
+    const weeks = Number($("#plannerWeeks").value);
+    state.profile = { ...state.profile, track, perDay, days, weeks };
+    const questionCount = effectivePerDay();
     const offsets = days === 1 ? [0] : Array.from({ length: days }, (_, index) => Math.round(index * 6 / (days - 1)));
     const pool = plannerPool(track);
     const assignments = [];
+    const supportTasks = [];
     let cursor = 0;
-    offsets.forEach((offset) => {
-      for (let slot = 0; slot < perDay && pool[cursor]; slot += 1) {
-        assignments.push({ date: dateKey(addDays(new Date(), offset)), questionId: pool[cursor].id });
-        cursor += 1;
-      }
-    });
-    state.planner = { track, perDay, days, assignments };
+    const startDate = dateKey();
+    for (let weekIndex = 0; weekIndex < weeks; weekIndex += 1) {
+      offsets.forEach((offset, dayIndex) => {
+        const date = dateKey(addDays(new Date(`${startDate}T12:00:00`), weekIndex * 7 + offset));
+        for (let slot = 0; slot < questionCount && pool[cursor]; slot += 1) {
+          assignments.push({ date, questionId: pool[cursor].id, week: weekIndex + 1, slot: slot + 1 });
+          cursor += 1;
+        }
+        if (state.profile.includeBehavioral && dayIndex % 2 === 0) supportTasks.push({ id: `${date}-behavioral`, date, week: weekIndex + 1, type: "behavioral", title: "Speak one STAR-L answer", duration: 20 });
+        if (state.profile.includeCore && dayIndex % 2 === 1) supportTasks.push({ id: `${date}-core`, date, week: weekIndex + 1, type: "core", title: "Revise one core CS topic", duration: 25 });
+        if (state.profile.includeProject && dayIndex === Math.max(0, days - 2)) supportTasks.push({ id: `${date}-project`, date, week: weekIndex + 1, type: "project", title: "Explain project architecture or trade-off", duration: 20 });
+        if (state.profile.includeAptitude && ["oa", "placement"].includes(state.profile.style) && dayIndex % 2 === 1) supportTasks.push({ id: `${date}-aptitude`, date, week: weekIndex + 1, type: "aptitude", title: "Complete one timed aptitude set", duration: 20 });
+        if (state.profile.includeMocks && dayIndex === days - 1) supportTasks.push({ id: `${date}-mock`, date, week: weekIndex + 1, type: "mock", title: "Run and score a weekly mock", duration: styleProfile().timer + 15 });
+      });
+    }
+    state.planner = { ...state.planner, track, perDay, days, weeks, startDate, weekCursor: 0, assignments, supportTasks, supportCompleted: state.planner.supportCompleted || {} };
     saveState();
+    renderSetupProfile();
     renderPlanner();
     setupToday();
     updateStats();
-    showToast(`Weekly sprint created with ${assignments.length} questions.`);
+    showToast(`${weeks}-week roadmap created with ${assignments.length} DSA tasks.`);
   }
 
   function renderPlanner() {
@@ -563,36 +939,49 @@
     $("#plannerTrack").value = state.planner.track;
     $("#plannerPerDay").value = String(state.planner.perDay);
     $("#plannerDays").value = String(state.planner.days);
+    $("#plannerWeeks").value = String(state.planner.weeks || state.profile.weeks);
 
     const today = dateKey();
-    const visibleDates = Array.from({ length: 7 }, (_, index) => dateKey(addDays(new Date(), index)));
+    const totalWeeks = Number(state.planner.weeks || state.profile.weeks || 1);
+    state.planner.weekCursor = Math.max(0, Math.min(totalWeeks - 1, Number(state.planner.weekCursor) || 0));
+    const start = state.planner.startDate || today;
+    const weekStart = addDays(new Date(`${start}T12:00:00`), state.planner.weekCursor * 7);
+    const visibleDates = Array.from({ length: 7 }, (_, index) => dateKey(addDays(weekStart, index)));
     const carryover = state.planner.assignments.filter((assignment) => assignment.date < today && getQuestionState(assignment.questionId).status !== "solved");
     const completed = state.planner.assignments.filter((assignment) => getQuestionState(assignment.questionId).status === "solved").length;
+    const supportCompleted = state.planner.supportTasks.filter((task) => state.planner.supportCompleted[task.id]).length;
     const total = state.planner.assignments.length;
-    const percentage = total ? Math.round((completed / total) * 100) : 0;
+    const allTotal = total + state.planner.supportTasks.length;
+    const percentage = allTotal ? Math.round(((completed + supportCompleted) / allTotal) * 100) : 0;
 
     $("#plannerProgress").textContent = `${percentage}%`;
     $("#plannerProgressFill").style.width = `${percentage}%`;
     $("#plannerCompleted").textContent = `${completed} / ${total}`;
     $("#plannerCarryover").textContent = String(carryover.length);
+    $("#plannerWeekLabel").textContent = `Week ${state.planner.weekCursor + 1} of ${totalWeeks}`;
+    $("#plannerWeekPhase").textContent = phaseForWeek(state.planner.weekCursor, totalWeeks);
+    $("#planPrevWeek").disabled = state.planner.weekCursor <= 0;
+    $("#planNextWeek").disabled = state.planner.weekCursor >= totalWeeks - 1;
 
-    if (!total) {
-      $("#weeklyPlan").innerHTML = '<div class="planner-empty"><strong>No sprint generated yet.</strong><span>Choose a track and workload, then create your first seven-day plan.</span></div>';
+    if (!allTotal) {
+      $("#weeklyPlan").innerHTML = '<div class="planner-empty"><strong>No roadmap generated yet.</strong><span>Open Plan setup or use the controls above to build a complete daily schedule.</span></div>';
       return;
     }
 
     $("#weeklyPlan").innerHTML = visibleDates.map((date, index) => {
       const scheduled = state.planner.assignments.filter((assignment) => assignment.date === date);
-      const tasks = [...(index === 0 ? carryover : []), ...scheduled.filter((assignment) => !carryover.includes(assignment))];
-      return `<article class="planner-day ${index === 0 ? "today" : ""}">
-        <div class="planner-day-head"><div><span>${index === 0 ? "Today" : new Intl.DateTimeFormat("en-IN", { weekday: "short" }).format(new Date(`${date}T12:00:00`))}</span><strong>${formatShortDate(date)}</strong></div><small>${tasks.length} ${tasks.length === 1 ? "task" : "tasks"}</small></div>
-        <div class="plan-tasks">${tasks.length ? tasks.map((assignment) => {
+      const tasks = [...(state.planner.weekCursor === 0 && index === 0 ? carryover : []), ...scheduled.filter((assignment) => !carryover.includes(assignment))];
+      const support = state.planner.supportTasks.filter((task) => task.date === date);
+      const taskCount = tasks.length + support.length;
+      return `<article class="planner-day ${date === today ? "today" : ""}">
+        <div class="planner-day-head"><div><span>${date === today ? "Today" : new Intl.DateTimeFormat("en-IN", { weekday: "short" }).format(new Date(`${date}T12:00:00`))}</span><strong>${formatShortDate(date)}</strong></div><small>${taskCount} ${taskCount === 1 ? "task" : "tasks"}</small></div>
+        <div class="plan-tasks">${taskCount ? tasks.map((assignment) => {
           const question = questionById.get(assignment.questionId);
           if (!question) return "";
           const done = getQuestionState(question.id).status === "solved";
           const late = assignment.date < today && !done;
           return `<button class="plan-task ${done ? "done" : ""}" data-open-study="${question.id}"><span>${done ? "✓" : late ? "!" : "○"}</span><span><strong>${escapeHtml(question.title)}</strong><small>${late ? "Carryover · " : ""}${escapeHtml(question.module)}</small></span></button>`;
-        }).join("") : '<p class="rest-day">Rest, revise, or run a mock.</p>'}</div>
+        }).join("") + support.map((task) => `<button class="plan-task support-task ${state.planner.supportCompleted[task.id] ? "done" : ""}" data-support-task="${task.id}"><span>${state.planner.supportCompleted[task.id] ? "✓" : "◇"}</span><span><strong>${escapeHtml(task.title)}</strong><small>${escapeHtml(task.type)} · ${task.duration} min</small></span></button>`).join("") : '<p class="rest-day">Rest, revise, or run a mock.</p>'}</div>
       </article>`;
     }).join("");
   }
@@ -628,7 +1017,7 @@
       interview: {
         kicker: "150-question interview track",
         heading: "Core 90 + A2Z essentials",
-        lead: "Your focused Google-apprenticeship route: 90 interview-pattern questions plus 60 gap-covering A2Z essentials."
+        lead: `A focused ${companyLabel()} ${roleLabel()} route: 90 interview-pattern questions plus 60 gap-covering A2Z essentials.`
       },
       striver: {
         kicker: "Official complete curriculum · 442 items",
@@ -678,6 +1067,7 @@
       || (libraryPreset === "interview" && question.collection !== COMPLETE_A2Z_COLLECTION)
       || (libraryPreset === "striver" && question.collection === COMPLETE_A2Z_COLLECTION);
     const modeMatches = libraryMode === "all"
+      || (libraryMode === "plan" && plannerQuestionIds().has(resolveProgressId(question.id)))
       || (libraryMode === "due" && isDue(questionState))
       || (libraryMode === "bookmarked" && questionState.bookmarked)
       || (libraryMode === "mistakes" && Boolean(questionState.mistakes || questionState.mistakeType))
@@ -837,7 +1227,7 @@
     activePromptId = prompt.id;
     state.activePrompt = prompt.id;
     $("#star-builder-heading").textContent = prompt.title;
-    $("#activePromptCue").textContent = prompt.cue;
+    $("#activePromptCue").textContent = behavioralCue(prompt);
     const notes = state.stars[prompt.id] || {};
     $$('[data-star-field]').forEach((field) => { field.value = notes[field.dataset.starField] || ""; });
     if (rerenderList) {
@@ -847,7 +1237,8 @@
   }
 
   function renderCore() {
-    $("#coreGrid").innerHTML = coreTopics.map((topic) => {
+    const visibleCoreTopics = displayCoreTopics();
+    $("#coreGrid").innerHTML = visibleCoreTopics.map((topic) => {
       const done = Boolean(state.core[topic.id]);
       return `<article class="core-card ${done ? "done" : ""}" id="core-card-${topic.id}">
         <div class="core-card-top"><span class="core-card-icon">${escapeHtml(topic.code)}</span><button data-core-toggle="${topic.id}" aria-label="${done ? "Mark incomplete" : "Mark complete"}">${done ? "✓" : "○"}</button></div>
@@ -856,7 +1247,7 @@
         <ul class="core-questions">${topic.questions.map((question) => `<li>${escapeHtml(question)}</li>`).join("")}</ul>
       </article>`;
     }).join("");
-    $("#coreDoneCount").textContent = `${coreTopics.filter((topic) => state.core[topic.id]).length} / ${coreTopics.length}`;
+    $("#coreDoneCount").textContent = `${visibleCoreTopics.filter((topic) => state.core[topic.id]).length} / ${visibleCoreTopics.length}`;
   }
 
   function updateMockAverage() {
@@ -882,15 +1273,17 @@
   }
 
   function updateStats() {
-    const solved = interviewQuestions.filter((question) => getQuestionState(question.id).status === "solved").length;
-    const review = interviewQuestions.filter((question) => isDue(getQuestionState(question.id))).length;
-    const bookmarks = interviewQuestions.filter((question) => getQuestionState(question.id).bookmarked).length;
-    const percent = Math.round((solved / interviewQuestions.length) * 100);
+    const pool = profileQuestionPool();
+    const solved = pool.filter((question) => getQuestionState(question.id).status === "solved").length;
+    const review = pool.filter((question) => isDue(getQuestionState(question.id))).length;
+    const bookmarks = pool.filter((question) => getQuestionState(question.id).bookmarked).length;
+    const percent = Math.round((solved / pool.length) * 100);
     $("#progressPercent").textContent = `${percent}%`;
     $("#progressRing").style.background = `conic-gradient(var(--blue) ${percent * 3.6}deg, #e8edf4 0deg)`;
-    $("#solvedCount").textContent = `${solved} / ${interviewQuestions.length}`;
+    $("#solvedCount").textContent = `${solved} / ${pool.length}`;
+    $("#progressCollectionLabel").textContent = `${{ balanced: "Interview 150", core: "Core 90", a2z: "A2Z Essentials", striver: "Complete A2Z" }[state.profile.track] || "questions"} solved`;
     $("#reviewCount").textContent = `${review} ${review === 1 ? "question" : "questions"}`;
-    $("#nowQueue").textContent = `${interviewQuestions.filter((question) => question.priority === "Now" && getQuestionState(question.id).status !== "solved").length} remaining`;
+    $("#nowQueue").textContent = `${pool.filter((question) => getQuestionState(question.id).status !== "solved").length} remaining`;
     $("#bookmarkMetric").textContent = `${bookmarks} saved`;
     const todayTasks = state.planner.assignments.filter((assignment) => assignment.date <= dateKey() && getQuestionState(assignment.questionId).status !== "solved").length;
     $("#todayPlanMetric").textContent = state.planner.assignments.length ? `${todayTasks} open` : "Not planned";
@@ -929,13 +1322,73 @@
   function resetTimer() {
     clearInterval(timerHandle);
     timerHandle = null;
-    timerSeconds = 45 * 60;
+    timerSeconds = Number($("#timerPreset").value || styleProfile().timer || 45) * 60;
     $("#timerStart").textContent = "Start";
     updateTimer();
   }
 
   function restoreChecklist() {
     $$('[data-checklist]').forEach((checkbox) => { checkbox.checked = Boolean(state.checklist[checkbox.dataset.checklist]); });
+  }
+
+  function applyProfileAndPlan() {
+    state.profile = profileFromForm();
+    state.planner = {
+      ...state.planner,
+      track: state.profile.track,
+      perDay: state.profile.perDay,
+      days: state.profile.days,
+      weeks: state.profile.weeks
+    };
+    saveState();
+    $("#plannerTrack").value = state.profile.track;
+    $("#plannerPerDay").value = String(state.profile.perDay);
+    $("#plannerDays").value = String(state.profile.days);
+    $("#plannerWeeks").value = String(state.profile.weeks);
+    $("#timerPreset").value = String(styleProfile().timer);
+    resetTimer();
+    generatePlanner();
+    renderProfileChrome();
+    renderCore();
+    loadPrompt(activePromptId, false);
+    renderTargetResources();
+    updateLibraryIntro();
+    switchView("today");
+  }
+
+  function exportProgressFile() {
+    const payload = {
+      app: "SDE Interview Prep Partner",
+      schemaVersion: 2,
+      exportedAt: new Date().toISOString(),
+      state
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `interview-prep-progress-${dateKey()}.json`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+    $("#backupStatus").textContent = "Progress backup downloaded. Keep it private because it may contain notes and saved code.";
+    showToast("Progress exported.");
+  }
+
+  async function importProgressFile(file) {
+    if (!file) return;
+    try {
+      const payload = JSON.parse(await file.text());
+      const imported = payload?.state || payload;
+      if (!imported || typeof imported !== "object" || !imported.questions || !imported.planner) throw new Error("invalid");
+      if (!window.confirm("Import this backup and replace the progress currently saved on this device?")) return;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(imported));
+      window.location.reload();
+    } catch {
+      $("#backupStatus").textContent = "This file is not a valid Interview Prep Partner backup.";
+      showToast("Import failed. Choose a valid JSON backup.");
+    }
   }
 
   function registerWebMcpTools() {
@@ -953,7 +1406,7 @@
     register({
       name: "read_preparation_status",
       title: "Read preparation status",
-      description: "Read Sidhartha's focused Interview 150 and complete Striver A2Z 442 progress, revision queues, planner status, mock count, and next recommended question without changing anything.",
+      description: "Read the candidate's target profile, Interview 150 and complete Striver A2Z progress, revision queues, customized roadmap, mock count, and next recommended question without changing anything.",
       inputSchema: { type: "object", properties: {}, additionalProperties: false },
       annotations: { readOnlyHint: true, untrustedContentHint: false },
       execute() {
@@ -964,6 +1417,7 @@
         });
         const next = nextRecommendedQuestion();
         return {
+          target: { candidate: state.profile.name, company: companyLabel(), role: roleLabel(), style: styleProfile().label, weeks: state.profile.weeks },
           interview150: collectionStatus(interviewQuestions),
           completeA2Z: collectionStatus(completeA2ZQuestions),
           plannedTasks: state.planner.assignments.length,
@@ -1029,7 +1483,7 @@
     register({
       name: "start_dsa_practice",
       title: "Start DSA practice",
-      description: "Open a selected question in the site's 45-minute practice room and mark it as practicing when it was not started.",
+      description: "Open a selected question in the site's configurable practice room and mark it as practicing when it was not started.",
       inputSchema: {
         type: "object",
         properties: { questionId: { type: "string", description: "Stable question id such as q01, a01, or s001." } },
@@ -1044,7 +1498,7 @@
         renderQuestions();
         switchView("today");
         setTimeout(() => $("#practiceRoom").scrollIntoView({ behavior: "smooth", block: "start" }), 100);
-        return { started: true, question: { id: question.id, title: question.title, topic: question.topic }, timerMinutes: 45 };
+        return { started: true, question: { id: question.id, title: question.title, topic: question.topic }, timerMinutes: Number($("#timerPreset").value) };
       }
     });
 
@@ -1054,6 +1508,7 @@
   function bindEvents() {
     $$(".nav-item").forEach((button) => button.addEventListener("click", () => switchView(button.dataset.view)));
     $$('[data-jump]').forEach((button) => button.addEventListener("click", () => switchView(button.dataset.jump)));
+    $$('[data-view-jump]').forEach((button) => button.addEventListener("click", () => switchView(button.dataset.viewJump)));
 
     $("#mobileMenu").addEventListener("click", () => {
       const open = document.body.classList.toggle("nav-open");
@@ -1078,6 +1533,11 @@
       renderQuestions();
       $("#practiceRoom").scrollIntoView({ behavior: "smooth", block: "start" });
     });
+    $("#dailyQuestionQueue").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-daily-question]");
+      if (!button) return;
+      openStudySheet(button.dataset.dailyQuestion);
+    });
 
     $("#openDailyBehavior").addEventListener("click", (event) => {
       loadPrompt(event.currentTarget.dataset.promptId);
@@ -1092,6 +1552,24 @@
 
     $("#timerStart").addEventListener("click", startPauseTimer);
     $("#timerReset").addEventListener("click", resetTimer);
+    $("#timerPreset").addEventListener("change", resetTimer);
+
+    $("#profileForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      applyProfileAndPlan();
+    });
+    $("#profileForm").addEventListener("change", (event) => {
+      if (["profileRole", "profileCompany"].includes(event.target.id)) refreshSetupConditionals();
+      updateWorkloadPreview();
+    });
+    $("#profileForm").addEventListener("input", (event) => {
+      if (["profileCustomRole", "profileCustomCompany"].includes(event.target.id)) updateWorkloadPreview();
+    });
+    $("#replanFromToday").addEventListener("click", applyProfileAndPlan);
+    $("#exportProgress").addEventListener("click", exportProgressFile);
+    $("#footerExport").addEventListener("click", exportProgressFile);
+    $("#importProgress").addEventListener("click", () => $("#importProgressFile").click());
+    $("#importProgressFile").addEventListener("change", (event) => importProgressFile(event.target.files?.[0]));
 
     ["#questionSearch", "#topicFilter", "#typeFilter", "#difficultyFilter", "#statusFilter"].forEach((selector) => {
       $(selector).addEventListener(selector === "#questionSearch" ? "input" : "change", renderQuestions);
@@ -1148,9 +1626,29 @@
     });
 
     $("#generatePlan").addEventListener("click", generatePlanner);
+    $("#planPrevWeek").addEventListener("click", () => {
+      state.planner.weekCursor = Math.max(0, Number(state.planner.weekCursor) - 1);
+      saveState();
+      renderPlanner();
+    });
+    $("#planNextWeek").addEventListener("click", () => {
+      state.planner.weekCursor = Math.min(Number(state.planner.weeks || 1) - 1, Number(state.planner.weekCursor) + 1);
+      saveState();
+      renderPlanner();
+    });
     $("#weeklyPlan").addEventListener("click", (event) => {
       const button = event.target.closest("[data-open-study]");
-      if (button) openStudySheet(button.dataset.openStudy);
+      if (button) {
+        openStudySheet(button.dataset.openStudy);
+        return;
+      }
+      const support = event.target.closest("[data-support-task]");
+      if (!support) return;
+      const id = support.dataset.supportTask;
+      state.planner.supportCompleted[id] = !state.planner.supportCompleted[id];
+      saveState();
+      renderPlanner();
+      showToast(state.planner.supportCompleted[id] ? "Supporting task completed." : "Supporting task reopened.");
     });
 
     $("#studyClose").addEventListener("click", closeStudySheet);
@@ -1291,6 +1789,11 @@
   }
 
   function init() {
+    renderSetupProfile();
+    renderProfileChrome();
+    renderTargetResources();
+    $("#timerPreset").value = String(styleProfile().timer);
+    timerSeconds = styleProfile().timer * 60;
     populateTopicFilter();
     updateLibraryIntro();
     setupToday();
